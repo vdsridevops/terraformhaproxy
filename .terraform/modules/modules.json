@@ -1,0 +1,1 @@
+{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"haproxy","Source":"./modules/haproxy","Dir":"modules/haproxy"},{"Key":"webapp1","Source":"./modules/webapp1","Dir":"modules/webapp1"},{"Key":"webapp2","Source":"./modules/webapp2","Dir":"modules/webapp2"}]}
