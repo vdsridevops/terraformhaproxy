@@ -1,0 +1,6 @@
+---
+
+apachehost1: terraform-webapp1
+apachehost2: terraform-webapp2
+apachehost1ip: 10.138.0.11
+apachehost2ip: 10.138.0.12

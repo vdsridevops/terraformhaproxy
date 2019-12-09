@@ -1,0 +1,12 @@
+---
+# tasks file for haproxy
+
+
+- name: Install haproxy
+  yum: name=haproxy state=present
+  tags: haproxy
+
+- name: Copy haproxy config file
+  template: src=haproxy.cfg dest=/etc/haproxy/haproxy.cfg
+  tags: haproxy
+  notify: restart haproxy service

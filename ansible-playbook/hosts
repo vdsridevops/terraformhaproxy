@@ -1,0 +1,6 @@
+[webservers]
+terraform-webapp1
+terraform-webapp2
+
+[loadbalancer]
+terraform-haproxy

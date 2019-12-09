@@ -1,0 +1,31 @@
+resource "google_compute_instance" "vm_instance" {
+  name         = "terraform-webapp1"
+  machine_type = var.machine_type
+
+  boot_disk {
+    initialize_params {
+      image = var.image
+    }
+  }
+
+  network_interface {
+    network       = "default"
+    subnetwork    = "default"
+    network_ip    = "10.138.0.11"
+    access_config {
+    }
+  }
+
+# Ansible requires Python to be installed on the remote machine as well as the local machine.
+  provisioner "remote-exec" {
+    inline = ["sudo yum install python -y"]
+  }
+
+  connection {
+    private_key = file("/terraform/gcp/modules/webapp1/id_rsa")
+    user        = "root"
+    host        = "10.138.0.11"
+    type        = "ssh"
+  }
+
+}

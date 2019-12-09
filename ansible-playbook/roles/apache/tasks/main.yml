@@ -1,0 +1,13 @@
+---
+# tasks file for apache
+
+- name: install apache on web server
+  yum: name=httpd state=present
+  with_items:
+   - httpd
+   - httpd-tools
+
+- name: copy php file
+  copy: src=file.php dest=/var/www/file.php
+  tags: apache
+  notify: restart apache service

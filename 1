@@ -1,0 +1,31 @@
+terraform {
+  required_version = ">= 0.12.16"
+}
+
+provider "google" {
+  project = var.project
+  region  = var.region
+  zone    = var.zone
+}
+
+module "webapp1" {
+  source                = "./modules/webapp1"
+}
+
+module "webapp2" {
+  source                = "./modules/webapp2"
+}
+
+module "haproxy" {
+  source                = "./modules/haproxy"
+}
+
+# Ansible requires Python to be installed on the remote machine as well as the local machine.
+  provisioner "remote-exec" {
+    inline = ["sudo yum install python -y"]
+  }
+  
+  connection {
+    private_key = "file(MyKeyPair.pem.pub)"
+    user        = "root"
+  }

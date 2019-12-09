@@ -1,0 +1,5 @@
+---
+# handlers file for haproxy
+
+- name: restart haproxy service
+  service: name=haproxy state=started

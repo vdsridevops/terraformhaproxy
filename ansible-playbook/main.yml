@@ -1,0 +1,11 @@
+---
+
+- name: Install apache 
+  hosts: webservers
+  roles:
+    - apache
+
+- name: install and configure Loadbalancer
+  hosts: loadbalancer
+  roles:
+    - haproxy

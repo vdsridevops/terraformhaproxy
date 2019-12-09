@@ -1,0 +1,114 @@
+HPProxy:
+========
+https://www.digitalocean.com/community/tutorials/how-to-use-haproxy-to-set-up-http-load-balancing-on-an-ubuntu-vps  
+
+Environment:
+------------
+
+apache web server 1: ansible-node1 (10.152.0.4)
+apache web server 2: ansible-node2 (10.152.0.5)
+Load balancer server : haproxy (10.152.0.6)
+
+Ansible environment:
+---------------------
+
+Global Varilbe you can mention on : /srini/haproxy/group_vars/loadbalancer
+Main YAML file: /srini/haproxy/main.yml
+Two roles: apache and haproxy --> /srini/haproxy/roles
+Template used on role haproxy --> /srini/haproxy/roles/haproxy/templates/haproxy.cfg ( four variables refered from global var )
+
+
+
+[root@ansible-cont haproxy]# tree
+.
+├── group_vars
+│   └── loadbalancer
+├── hosts
+├── main.yml
+└── roles
+    ├── apache
+    │   ├── defaults
+    │   │   └── main.yml
+    │   ├── files
+    │   │   └── file.php
+    │   ├── handlers
+    │   │   └── main.yml
+    │   ├── meta
+    │   │   └── main.yml
+    │   ├── README.md
+    │   ├── tasks
+    │   │   └── main.yml
+    │   ├── templates
+    │   ├── tests
+    │   │   ├── inventory
+    │   │   └── test.yml
+    │   └── vars
+    │       └── main.yml
+    └── haproxy
+        ├── defaults
+        │   └── main.yml
+        ├── files
+        ├── handlers
+        │   └── main.yml
+        ├── meta
+        │   └── main.yml
+        ├── README.md
+        ├── tasks
+        │   └── main.yml
+        ├── templates
+        │   └── haproxy.cfg
+        ├── tests
+        │   ├── inventory
+        │   └── test.yml
+        └── vars
+            └── main.yml
+
+
+
+
+
+
+
+To check haproxy status:
+-------------------------
+http://35.197.180.204/haproxy?stats
+
+
+
+For manual installation:
+-------------------------
+yum install haproxy
+systemctl enable haproxy
+systemctl start haproxy
+firewall-cmd --permanent --zone=public --add-service=http
+firewall-cmd --permanent --zone=public --add-port=8181/tcp
+firewall-cmd --reload
+
+vim /etc/haproxy/haproxy.cfg
+
+global
+    log 127.0.0.1 local0 notice
+    maxconn 2000
+    user haproxy
+    group haproxy
+
+defaults
+    log     global
+    mode    http
+    option  httplog
+    option  dontlognull
+    retries 3
+    option redispatch
+    timeout connect  5000
+    timeout client  10000
+    timeout server  10000
+
+listen appname 0.0.0.0:80
+    mode http
+    stats enable
+    stats uri /haproxy?stats
+    balance roundrobin
+    option httpclose
+    option forwardfor
+    server ansible-node1 10.152.0.4:80 check
+    server ansible-node2 10.152.0.5:80 check

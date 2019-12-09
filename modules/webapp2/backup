@@ -1,0 +1,18 @@
+resource "google_compute_instance" "vm_instance" {
+  name         = "terraform-webapp2"
+  machine_type = var.machine_type
+
+  boot_disk {
+    initialize_params {
+      image = var.image
+    }
+  }
+
+  network_interface {
+    network       = "default"
+    subnetwork    = "default"
+    network_ip    = "10.138.0.12"
+    access_config {
+    }
+  }
+}
